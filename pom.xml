@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>se.uhr.sonar</groupId>
     <artifactId>sonar-pr-gerrit-plugin</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <packaging>sonar-plugin</packaging>
 
     <properties>
@@ -19,7 +19,7 @@
         <connection>scm:git:git@github.com:swedish-council-for-higher-education/sonar-pr-gerrit-plugin.git</connection>
         <url>https://github.com/swedish-council-for-higher-education/sonar-pr-gerrit-plugin</url>
         <developerConnection>scm:git:git@github.com:swedish-council-for-higher-education/sonar-pr-gerrit-plugin.git</developerConnection>
-        <tag>sonar-pr-gerrit-plugin-0.0.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <dependencies>
