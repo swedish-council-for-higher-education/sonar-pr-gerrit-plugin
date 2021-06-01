@@ -15,16 +15,18 @@ In your SonarQube server, see Administration -> Configuration -> General Setting
 
 ## System requirements 
 
-* SonarQube™ version 8.8
+* SonarQube™ version 8.9 or later.
+
+
+## Build
+
+Java version 1.8 or later required.
+
+`./mvnw clean package`
 
 ## Release new version
 
-Updated version in `pom.xml`.
-
-`mvn release:prepare`
-`mvn release:perform`
-
+-
 
 ## ToDo
 
-* Upgrade minimal version to SonarQube™ version 8.9 LTS
