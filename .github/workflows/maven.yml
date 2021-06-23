@@ -26,5 +26,4 @@ jobs:
     - name: Archive results
       uses: actions/upload-artifact@v2
       with:
-        name: downloads
         path: target/sonar-pr-gerrit-plugin-*.jar
