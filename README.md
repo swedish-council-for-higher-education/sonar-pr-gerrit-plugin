@@ -4,8 +4,7 @@ SonarQube plugin that posts Gerrit votes depending on the Pull Request analysis 
 
 ## Download binaries
 
-Binaries are available in the GitHub [workflow](https://github.com/swedish-council-for-higher-education/sonar-pr-gerrit-plugin/actions). Select the latest workflow run result named `[maven-release-plugin] prepare release sonar-pr-gerrit-plugin-<version>`. Download and unzip the `artifact`. See SonarQube™ documentation for instructions
-how to install the plugin.
+Binaries are available in the GitHub [here](https://github.com/swedish-council-for-higher-education/sonar-pr-gerrit-plugin/packages/862593).
 
 ## Configuration
 
