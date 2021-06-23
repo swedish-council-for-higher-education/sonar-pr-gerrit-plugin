@@ -6,6 +6,10 @@ SonarQube plugin that posts Gerrit votes depending on the Pull Request analysis 
 
 Binaries are available on [GitHub](https://github.com/swedish-council-for-higher-education/sonar-pr-gerrit-plugin/packages/862593).
 
+## Installation
+
+See SonarQube™ documentation.
+
 ## Configuration
 
 In your SonarQube server, see Administration -> Configuration -> General Settings and `Gerrit PR`.
@@ -36,11 +40,11 @@ sh "./mvnw
 
 ## Build
 
-Java version 1.8 or later required.
+Java version 11 or later required.
 
 `./mvnw clean package`
 
 ### Release new version
 
-In GitHub create a new release, set tag with format n.n.n, and Publish release.
+In GitHub create a new release, set tag with format n.n.n, and press `Publish release`.
 
