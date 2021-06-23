@@ -22,6 +22,14 @@
         <tag>HEAD</tag>
     </scm>
 
+    <distributionManagement>
+        <repository>
+          <id>github</id>
+          <name>GitHub Packages</name>
+          <url>https://maven.pkg.github.com/swedish-council-for-higher-education/sonar-pr-gerrit-plugin</url>
+        </repository>
+      </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.sonarsource.sonarqube</groupId>
@@ -105,15 +113,6 @@
                 <configuration>
                     <pluginClass>se.uhr.sonar.gerrit.GerritPlugin</pluginClass>
                     <pluginDescription>Perform Gerrit votes depeding on Quality Gate status</pluginDescription>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-                <configuration>
-                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>
