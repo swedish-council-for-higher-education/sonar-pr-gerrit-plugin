@@ -43,7 +43,5 @@ Java version 1.8 or later required.
 
 ### Release new version
 
-`./mvnw clean release:prepare`
-
-`./mvnw clean release:perform`
+In GitHub create a new release, set tag with format n.n.n, and Publish release.
 
