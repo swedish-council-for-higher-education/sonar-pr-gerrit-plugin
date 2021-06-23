@@ -1,8 +1,6 @@
 # sonar-pr-gerrit-plugin
 
-This is **WIP!**
-
-A Sonar plugin that performs a Gerrit vote on a Pull Request analysis. The plugin simply vote -1 or 1 depending on if the Sonar Quality gate was passed or failed. **Note** that the plugin only performs the Gerrit vote. Any issues found by Sonar is not added as comments in Gerrit, instead a link to the sonar pull request is provided in the Gerrit comment. The plugin requires a SonarQube™ plan with the Pull Request feature. 
+SonarQube plugin that posts Gerrit votes depending on the Pull Request analysis result. The plugin simply vote -1 or 1 depending on if the Sonar Quality gate was passed or failed. **Note** the plugin only posts the Gerrit vote. Any issues found by Sonar is not added as comments in Gerrit, instead a link to the sonar pull request is provided in the Gerrit review message. The plugin requires a SonarQube™ plan with the Pull Request feature.
 
 
 ## Installation
@@ -13,10 +11,29 @@ See SonarQube™ documentation.
 
 In your SonarQube server, see Administration -> Configuration -> General Settings and `Gerrit PR`.
 
+## Build Env
+
+You must provide the following properties to the PR build:
+
+* sonar.pullrequest.base
+* sonar.pullrequest.branch
+* sonar.pullrequest.key
+
+### Jenkins Gerrit trigger
+
+If you are using [Jenkins Gerrit trigger](https://github.com/jenkinsci/gerrit-trigger-plugin) and Maven you may do something like this in the build triggered by `patchset-created`:
+
+```groovy
+sh "./mvnw
+    -Dsonar.pullrequest.base=${params.GERRIT_BRANCH} \
+    -Dsonar.pullrequest.branch=${params.GERRIT_REFSPEC.replaceFirst('refs/', '')} \
+    -Dsonar.pullrequest.key=${params.GERRIT_CHANGE_NUMBER} \
+    sonar:sonar"
+```
+
 ## System requirements 
 
 * SonarQube™ version 8.9 or later.
-
 
 ## Build
 
@@ -26,7 +43,8 @@ Java version 1.8 or later required.
 
 ## Release new version
 
--
+`./mvnw clean release:prepare`
+`./mvnw clean release:perform`
 
-## ToDo
+
 
