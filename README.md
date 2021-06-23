@@ -2,10 +2,10 @@
 
 SonarQube plugin that posts Gerrit votes depending on the Pull Request analysis result. The plugin simply vote -1 or 1 depending on if the Sonar Quality gate was passed or failed. **Note** the plugin only posts the Gerrit vote. Any issues found by Sonar is not added as comments in Gerrit, instead a link to the sonar pull request is provided in the Gerrit review message. The plugin requires a SonarQube™ plan with the Pull Request feature.
 
+## Download binaries
 
-## Installation
-
-See SonarQube™ documentation.
+Binaries are available in the GitHub [workflow](https://github.com/swedish-council-for-higher-education/sonar-pr-gerrit-plugin/actions). Select the latest workflow run result named `[maven-release-plugin] prepare release sonar-pr-gerrit-plugin-<version>`. Download and unzip the `artifact`. See SonarQube™ documentation for instructions
+how to install the plugin.
 
 ## Configuration
 
@@ -41,10 +41,9 @@ Java version 1.8 or later required.
 
 `./mvnw clean package`
 
-## Release new version
+### Release new version
 
 `./mvnw clean release:prepare`
+
 `./mvnw clean release:perform`
-
-
 
