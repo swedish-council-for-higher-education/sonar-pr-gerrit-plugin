@@ -14,6 +14,20 @@ See SonarQube™ documentation.
 
 In your SonarQube server, see Administration -> Configuration -> General Settings and `Gerrit PR`.
 
+In `gerrit.pr.gerrit.success.message` and `gerrit.pr.gerrit.failed.message` the following variables may be used:
+
+* `project.key`      - The project key
+* `project.name`     - The project name
+* `pullrequest.key`  - The pull request id
+
+### Example:
+
+You could configure `gerrit.pr.gerrit.failed.message` to provide a link to the list of issues for the particular pull request.
+
+```
+Sonar review failed, see http://myurl.com/dashboard?id=${project.key}&pullRequest=${pullrequest.key}
+```
+
 ## Build Env
 
 You must provide the following properties to the PR build:
@@ -48,3 +62,8 @@ Java version 11 or later required.
 
 In GitHub create a new release, set tag with format n.n.n, and press `Publish release`.
 
+## Revision history
+
+`1.0.0` - First version
+
+`1.1.0` - Removed configuration `gerrit.pr.sonar.url`

@@ -44,21 +44,17 @@ public class GerritClient {
 		String reviewLabel = configuration.get(Properties.GERRIT_REVIEW_LABEL.key()).orElseThrow();
 		String reviewSuccessMessage = configuration.get(Properties.GERRIT_REVIEW_SUCCESS_MESSAGE.key()).orElseThrow();
 		String reviewFailureMessage = configuration.get(Properties.GERRIT_REVIEW_FAILED_MESSAGE.key()).orElseThrow();
-		String sonarBaseUrl = configuration.get(Properties.SONAR_BASE_URL.key()).orElseThrow();
 
 		ReviewInput reviewInput = new ReviewInput();
 
-		String pullRequestUrl = Utils.createPullRequestUrl(sonarBaseUrl, project.getKey(), pullRequestId);
-
 		String message = score == Score.OK ? reviewSuccessMessage : reviewFailureMessage;
 
-		reviewInput.message(Utils.evaluateMessage(message, pullRequestUrl)).label(reviewLabel, score == Score.OK ? 1 : -1);
+		reviewInput.message(Message.evaluate(message, project, pullRequestId)).label(reviewLabel, score == Score.OK ? 1 : -1);
 
 		try {
 			ReviewResult result = gerritApi.changes().id(pullRequestId).revision(revision).review(reviewInput);
 
-			LOGGER.debug("PR: {}, project {}, vote: {}, reversion: {}, link: {}", pullRequestId, project.getName(), score, revision,
-					pullRequestUrl);
+			LOGGER.debug("PR: {}, project {}, vote: {}, revision: {}", pullRequestId, project.getName(), score, revision);
 
 			if (result.labels == null) {
 				LOGGER.error("Review on PR {} rejected", pullRequestId);

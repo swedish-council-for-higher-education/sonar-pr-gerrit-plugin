@@ -51,7 +51,8 @@ class GerritClientTest {
 		when(configuration.get(Properties.GERRIT_REVIEW_LABEL.key())).thenReturn(Optional.of("SONAR_LABEL"));
 		when(configuration.get(Properties.GERRIT_REVIEW_SUCCESS_MESSAGE.key())).thenReturn(Optional.of("SUCCESS!"));
 		when(configuration.get(Properties.GERRIT_REVIEW_FAILED_MESSAGE.key())).thenReturn(Optional.of("FAILED!"));
-		when(configuration.get(Properties.SONAR_BASE_URL.key())).thenReturn(Optional.of("http://mysonar.org"));
+		when(project.getKey()).thenReturn("org.apache.maven:commons-math");
+		when(project.getName()).thenReturn("commons-math");
 
 		Changes changes = mock(Changes.class);
 		when(gerritRestApi.changes()).thenReturn(changes);
@@ -77,7 +78,8 @@ class GerritClientTest {
 		when(configuration.get(Properties.GERRIT_REVIEW_LABEL.key())).thenReturn(Optional.of("SONAR_LABEL"));
 		when(configuration.get(Properties.GERRIT_REVIEW_SUCCESS_MESSAGE.key())).thenReturn(Optional.of("SUCCESS!"));
 		when(configuration.get(Properties.GERRIT_REVIEW_FAILED_MESSAGE.key())).thenReturn(Optional.of("FAILED!"));
-		when(configuration.get(Properties.SONAR_BASE_URL.key())).thenReturn(Optional.of("http://mysonar.org"));
+		when(project.getKey()).thenReturn("org.apache.maven:commons-math");
+		when(project.getName()).thenReturn("commons-math");
 
 		Changes changes = mock(Changes.class);
 		when(gerritRestApi.changes()).thenReturn(changes);

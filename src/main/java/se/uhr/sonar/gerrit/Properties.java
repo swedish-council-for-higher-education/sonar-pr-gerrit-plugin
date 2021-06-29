@@ -3,7 +3,6 @@ package se.uhr.sonar.gerrit;
 public enum Properties {
 
 	GERRIT_VOTES_ENABLED("enabled"),
-	SONAR_BASE_URL("sonar.url"),
 	GERRIT_URL("gerrit.url"),
 	GERRIT_USER("gerrit.user"),
 	GERRIT_PASSWD("gerrit.passwd"),

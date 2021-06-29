@@ -21,12 +21,6 @@ public class GerritPlugin implements Plugin {
 				.index(index++)
 				.build();
 
-		PropertyDefinition sonarBaseUrl = PropertyDefinition.builder(Properties.SONAR_BASE_URL.key())
-				.category(Constants.GERRIT_CATEGORY)
-				.type(PropertyType.STRING)
-				.index(index++)
-				.build();
-
 		PropertyDefinition gerritUrl = PropertyDefinition.builder(Properties.GERRIT_URL.key())
 				.category(Constants.GERRIT_CATEGORY)
 				.type(PropertyType.STRING)
@@ -55,18 +49,18 @@ public class GerritPlugin implements Plugin {
 		PropertyDefinition reviewSuccessMessage = PropertyDefinition.builder(Properties.GERRIT_REVIEW_SUCCESS_MESSAGE.key())
 				.category(Constants.GERRIT_CATEGORY)
 				.type(PropertyType.STRING)
-				.defaultValue("Sonar review passed, see ${sonar.pr.url}")
+				.defaultValue("Sonar review passed")
 				.index(index++)
 				.build();
 
 		PropertyDefinition reviewFailMessage = PropertyDefinition.builder(Properties.GERRIT_REVIEW_FAILED_MESSAGE.key())
 				.category(Constants.GERRIT_CATEGORY)
 				.type(PropertyType.STRING)
-				.defaultValue("Sonar review failed, see ${sonar.pr.url}")
+				.defaultValue("Sonar review failed")
 				.index(index++)
 				.build();
 
-		context.addExtensions(GerritPostProjectAnalysisTask.class, GerritClient.class, enabled, sonarBaseUrl, gerritUrl, gerritUser,
-				gerritPasswd, reviewLabel, reviewSuccessMessage, reviewFailMessage);
+		context.addExtensions(GerritPostProjectAnalysisTask.class, GerritClient.class, enabled, gerritUrl, gerritUser, gerritPasswd,
+				reviewLabel, reviewSuccessMessage, reviewFailMessage);
 	}
 }
