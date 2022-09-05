@@ -1,11 +1,6 @@
 package se.uhr.sonar.gerrit;
 
-import org.sonar.api.ce.ComputeEngineSide;
-import org.sonar.api.ce.posttask.Project;
-import org.sonar.api.config.Configuration;
-import org.sonar.api.server.ServerSide;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import java.util.Map;
 
 import com.google.gerrit.extensions.api.changes.ReviewInput;
 import com.google.gerrit.extensions.api.changes.ReviewResult;
@@ -13,6 +8,13 @@ import com.google.gerrit.extensions.restapi.RestApiException;
 import com.urswolfer.gerrit.client.rest.GerritAuthData;
 import com.urswolfer.gerrit.client.rest.GerritRestApi;
 import com.urswolfer.gerrit.client.rest.GerritRestApiFactory;
+
+import org.sonar.api.ce.ComputeEngineSide;
+import org.sonar.api.ce.posttask.Project;
+import org.sonar.api.config.Configuration;
+import org.sonar.api.server.ServerSide;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 
 @ServerSide
 @ComputeEngineSide
@@ -40,7 +42,7 @@ public class GerritClient {
 		this.gerritApi = gerritApi;
 	}
 
-	public void vote(Project project, String revision, String pullRequestId, Score score) {
+	public void vote(Project project, String revision, String pullRequestId, Score score, Map<String, String> variables) {
 		String reviewLabel = configuration.get(Properties.GERRIT_REVIEW_LABEL.key()).orElseThrow();
 		String reviewSuccessMessage = configuration.get(Properties.GERRIT_REVIEW_SUCCESS_MESSAGE.key()).orElseThrow();
 		String reviewFailureMessage = configuration.get(Properties.GERRIT_REVIEW_FAILED_MESSAGE.key()).orElseThrow();
@@ -49,7 +51,7 @@ public class GerritClient {
 
 		String message = score == Score.OK ? reviewSuccessMessage : reviewFailureMessage;
 
-		reviewInput.message(Message.evaluate(message, project, pullRequestId)).label(reviewLabel, score == Score.OK ? 1 : -1);
+		reviewInput.message(Message.evaluate(message, variables)).label(reviewLabel, score == Score.OK ? 1 : -1);
 
 		try {
 			ReviewResult result = gerritApi.changes().id(pullRequestId).revision(revision).review(reviewInput);

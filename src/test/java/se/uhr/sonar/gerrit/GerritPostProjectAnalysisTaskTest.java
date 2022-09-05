@@ -2,6 +2,7 @@ package se.uhr.sonar.gerrit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -67,7 +68,7 @@ class GerritPostProjectAnalysisTaskTest {
 
 		ArgumentCaptor<Project> projectCaptor = ArgumentCaptor.forClass(Project.class);
 
-		verify(gerritClient).vote(projectCaptor.capture(), eq(REVISION), eq(PR_ID), eq(Score.ERROR));
+		verify(gerritClient).vote(projectCaptor.capture(), eq(REVISION), eq(PR_ID), eq(Score.ERROR), anyMap());
 
 		assertThat(projectCaptor.getValue().getKey()).isEqualTo(PROJECT_KEY);
 		assertThat(projectCaptor.getValue().getName()).isEqualTo(PROJECT_NAME);
@@ -90,7 +91,7 @@ class GerritPostProjectAnalysisTaskTest {
 
 		ArgumentCaptor<Project> projectCaptor = ArgumentCaptor.forClass(Project.class);
 
-		verify(gerritClient).vote(projectCaptor.capture(), eq(REVISION), eq(PR_ID), eq(Score.OK));
+		verify(gerritClient).vote(projectCaptor.capture(), eq(REVISION), eq(PR_ID), eq(Score.OK), anyMap());
 
 		assertThat(projectCaptor.getValue().getKey()).isEqualTo(PROJECT_KEY);
 		assertThat(projectCaptor.getValue().getName()).isEqualTo(PROJECT_NAME);
@@ -111,6 +112,6 @@ class GerritPostProjectAnalysisTaskTest {
 				.withQualityGate(newQualityGateBuilder().setId("id").setName("name").setStatus(QualityGate.Status.OK).build())
 				.execute();
 
-		verify(gerritClient, times(0)).vote(any(Project.class), anyString(), anyString(), any(Score.class));
+		verify(gerritClient, times(0)).vote(any(Project.class), anyString(), anyString(), any(Score.class), anyMap());
 	}
 }

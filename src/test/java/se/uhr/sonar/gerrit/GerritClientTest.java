@@ -6,7 +6,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+
+import com.google.gerrit.extensions.api.changes.ChangeApi;
+import com.google.gerrit.extensions.api.changes.Changes;
+import com.google.gerrit.extensions.api.changes.ReviewInput;
+import com.google.gerrit.extensions.api.changes.ReviewResult;
+import com.google.gerrit.extensions.api.changes.RevisionApi;
+import com.google.gerrit.extensions.restapi.RestApiException;
+import com.urswolfer.gerrit.client.rest.GerritRestApi;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,14 +25,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.sonar.api.ce.posttask.Project;
 import org.sonar.api.config.Configuration;
-
-import com.google.gerrit.extensions.api.changes.ChangeApi;
-import com.google.gerrit.extensions.api.changes.Changes;
-import com.google.gerrit.extensions.api.changes.ReviewInput;
-import com.google.gerrit.extensions.api.changes.ReviewResult;
-import com.google.gerrit.extensions.api.changes.RevisionApi;
-import com.google.gerrit.extensions.restapi.RestApiException;
-import com.urswolfer.gerrit.client.rest.GerritRestApi;
 
 import se.uhr.sonar.gerrit.GerritClient.Score;
 
@@ -51,8 +52,6 @@ class GerritClientTest {
 		when(configuration.get(Properties.GERRIT_REVIEW_LABEL.key())).thenReturn(Optional.of("SONAR_LABEL"));
 		when(configuration.get(Properties.GERRIT_REVIEW_SUCCESS_MESSAGE.key())).thenReturn(Optional.of("SUCCESS!"));
 		when(configuration.get(Properties.GERRIT_REVIEW_FAILED_MESSAGE.key())).thenReturn(Optional.of("FAILED!"));
-		when(project.getKey()).thenReturn("org.apache.maven:commons-math");
-		when(project.getName()).thenReturn("commons-math");
 
 		Changes changes = mock(Changes.class);
 		when(gerritRestApi.changes()).thenReturn(changes);
@@ -66,7 +65,7 @@ class GerritClientTest {
 		ArgumentCaptor<ReviewInput> review = ArgumentCaptor.forClass(ReviewInput.class);
 		when(revision.review(review.capture())).thenReturn(result);
 
-		gerritClient.vote(project, REVISION, PR_ID, Score.ERROR);
+		gerritClient.vote(project, REVISION, PR_ID, Score.ERROR, Map.of());
 
 		assertThat(review.getValue().labels).containsOnly(entry("SONAR_LABEL", (short) -1));
 		assertThat(review.getValue().message).isEqualTo("FAILED!");
@@ -78,8 +77,6 @@ class GerritClientTest {
 		when(configuration.get(Properties.GERRIT_REVIEW_LABEL.key())).thenReturn(Optional.of("SONAR_LABEL"));
 		when(configuration.get(Properties.GERRIT_REVIEW_SUCCESS_MESSAGE.key())).thenReturn(Optional.of("SUCCESS!"));
 		when(configuration.get(Properties.GERRIT_REVIEW_FAILED_MESSAGE.key())).thenReturn(Optional.of("FAILED!"));
-		when(project.getKey()).thenReturn("org.apache.maven:commons-math");
-		when(project.getName()).thenReturn("commons-math");
 
 		Changes changes = mock(Changes.class);
 		when(gerritRestApi.changes()).thenReturn(changes);
@@ -93,7 +90,7 @@ class GerritClientTest {
 		ArgumentCaptor<ReviewInput> review = ArgumentCaptor.forClass(ReviewInput.class);
 		when(revision.review(review.capture())).thenReturn(result);
 
-		gerritClient.vote(project, REVISION, PR_ID, Score.OK);
+		gerritClient.vote(project, REVISION, PR_ID, Score.OK, Map.of());
 
 		assertThat(review.getValue().labels).containsOnly(entry("SONAR_LABEL", (short) 1));
 		assertThat(review.getValue().message).isEqualTo("SUCCESS!");
