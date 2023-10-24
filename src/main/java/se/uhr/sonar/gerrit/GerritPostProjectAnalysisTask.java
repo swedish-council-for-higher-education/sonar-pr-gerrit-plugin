@@ -1,9 +1,13 @@
 package se.uhr.sonar.gerrit;
 
+import static org.sonar.api.ce.posttask.QualityGate.EvaluationStatus.NO_VALUE;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.ce.posttask.Branch;
 import org.sonar.api.ce.posttask.PostProjectAnalysisTask;
 import org.sonar.api.ce.posttask.Project;
@@ -11,14 +15,12 @@ import org.sonar.api.ce.posttask.QualityGate;
 import org.sonar.api.ce.posttask.QualityGate.Condition;
 import org.sonar.api.ce.posttask.QualityGate.Status;
 import org.sonar.api.config.Configuration;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
 
 import se.uhr.sonar.gerrit.GerritClient.Score;
 
 public class GerritPostProjectAnalysisTask implements PostProjectAnalysisTask {
 
-	private static final Logger LOGGER = Loggers.get(GerritPostProjectAnalysisTask.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GerritPostProjectAnalysisTask.class);
 
 	private final GerritClient gerritClient;
 
@@ -54,7 +56,9 @@ public class GerritPostProjectAnalysisTask implements PostProjectAnalysisTask {
 		if (qualityGate != null) {
 			Project project = projectAnalysis.getProject();
 
-			Map<String, String> variables = conditions.stream().collect(Collectors.toMap(Condition::getMetricKey, Condition::getValue));
+			Map<String, String> variables = conditions.stream()
+					.filter(c -> c.getStatus() != NO_VALUE)
+					.collect(Collectors.toMap(Condition::getMetricKey, Condition::getValue));
 
 			variables.put("project.key", project.getKey());
 			variables.put("project.name", project.getName());
@@ -69,4 +73,5 @@ public class GerritPostProjectAnalysisTask implements PostProjectAnalysisTask {
 			LOGGER.error("No quality gate present for pull request: {}", pullRequestId);
 		}
 	}
+
 }

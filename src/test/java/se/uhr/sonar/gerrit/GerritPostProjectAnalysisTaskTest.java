@@ -8,10 +8,11 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.sonar.api.ce.posttask.PostProjectAnalysisTaskTester.newBranchBuilder;
-import static org.sonar.api.ce.posttask.PostProjectAnalysisTaskTester.newCeTaskBuilder;
-import static org.sonar.api.ce.posttask.PostProjectAnalysisTaskTester.newProjectBuilder;
-import static org.sonar.api.ce.posttask.PostProjectAnalysisTaskTester.newQualityGateBuilder;
+import static org.sonar.api.testfixtures.posttask.PostProjectAnalysisTaskTester.newBranchBuilder;
+import static org.sonar.api.testfixtures.posttask.PostProjectAnalysisTaskTester.newCeTaskBuilder;
+import static org.sonar.api.testfixtures.posttask.PostProjectAnalysisTaskTester.newConditionBuilder;
+import static org.sonar.api.testfixtures.posttask.PostProjectAnalysisTaskTester.newProjectBuilder;
+import static org.sonar.api.testfixtures.posttask.PostProjectAnalysisTaskTester.newQualityGateBuilder;
 
 import java.util.Date;
 import java.util.Optional;
@@ -24,10 +25,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.sonar.api.ce.posttask.Branch;
 import org.sonar.api.ce.posttask.CeTask;
-import org.sonar.api.ce.posttask.PostProjectAnalysisTaskTester;
 import org.sonar.api.ce.posttask.Project;
 import org.sonar.api.ce.posttask.QualityGate;
 import org.sonar.api.config.Configuration;
+import org.sonar.api.testfixtures.posttask.PostProjectAnalysisTaskTester;
 
 import se.uhr.sonar.gerrit.GerritClient.Score;
 
@@ -87,6 +88,30 @@ class GerritPostProjectAnalysisTaskTest {
 				.withRevision(REVISION)
 				.withBranch(newBranchBuilder().setName(PR_ID).setType(Branch.Type.PULL_REQUEST).build())
 				.withQualityGate(newQualityGateBuilder().setId("id").setName("name").setStatus(QualityGate.Status.OK).build())
+				.execute();
+
+		ArgumentCaptor<Project> projectCaptor = ArgumentCaptor.forClass(Project.class);
+
+		verify(gerritClient).vote(projectCaptor.capture(), eq(REVISION), eq(PR_ID), eq(Score.OK), anyMap());
+
+		assertThat(projectCaptor.getValue().getKey()).isEqualTo(PROJECT_KEY);
+		assertThat(projectCaptor.getValue().getName()).isEqualTo(PROJECT_NAME);
+	}
+
+	@Test
+	void shouldFilterConditionsWithoutValue() {
+
+		when(configuration.getBoolean(Properties.GERRIT_VOTES_ENABLED.key())).thenReturn(Optional.of(true));
+
+		PostProjectAnalysisTaskTester.of(postProjectAnalysisTask)
+				.withCeTask(newCeTaskBuilder().setId("id").setStatus(CeTask.Status.SUCCESS).build())
+				.withProject(newProjectBuilder().setUuid("uuid").setKey(PROJECT_KEY).setName(PROJECT_NAME).build())
+				.at(NOW)
+				.withAnalysisUuid(ANALYSIS_UUID)
+				.withRevision(REVISION)
+				.withBranch(newBranchBuilder().setName(PR_ID).setType(Branch.Type.PULL_REQUEST).build())
+				.withQualityGate(newQualityGateBuilder().setId("id").setName("name").setStatus(QualityGate.Status.OK).
+						add(newConditionBuilder().setMetricKey("key").setOperator(QualityGate.Operator.GREATER_THAN).setErrorThreshold("A").buildNoValue()).build())
 				.execute();
 
 		ArgumentCaptor<Project> projectCaptor = ArgumentCaptor.forClass(Project.class);

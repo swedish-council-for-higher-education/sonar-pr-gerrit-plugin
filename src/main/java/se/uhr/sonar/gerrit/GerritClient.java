@@ -2,6 +2,13 @@ package se.uhr.sonar.gerrit;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.sonar.api.ce.ComputeEngineSide;
+import org.sonar.api.ce.posttask.Project;
+import org.sonar.api.config.Configuration;
+import org.sonar.api.server.ServerSide;
+
 import com.google.gerrit.extensions.api.changes.ReviewInput;
 import com.google.gerrit.extensions.api.changes.ReviewResult;
 import com.google.gerrit.extensions.restapi.RestApiException;
@@ -9,18 +16,11 @@ import com.urswolfer.gerrit.client.rest.GerritAuthData;
 import com.urswolfer.gerrit.client.rest.GerritRestApi;
 import com.urswolfer.gerrit.client.rest.GerritRestApiFactory;
 
-import org.sonar.api.ce.ComputeEngineSide;
-import org.sonar.api.ce.posttask.Project;
-import org.sonar.api.config.Configuration;
-import org.sonar.api.server.ServerSide;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
-
 @ServerSide
 @ComputeEngineSide
 public class GerritClient {
 
-	private static final Logger LOGGER = Loggers.get(GerritClient.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GerritClient.class);
 
 	private final Configuration configuration;
 	private final GerritRestApi gerritApi;

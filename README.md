@@ -1,6 +1,7 @@
 # sonar-pr-gerrit-plugin
 
-SonarQube plugin that posts Gerrit votes depending on the Pull Request analysis result. The plugin simply vote -1 or 1 depending on if the Sonar Quality gate was passed or failed. **Note** the plugin only posts the Gerrit vote. Any issues found by Sonar is not added as comments in Gerrit, instead a link to the sonar pull request is provided in the Gerrit review message. The plugin requires a SonarQube™ plan with the Pull Request feature.
+SonarQube plugin that posts Gerrit votes depending on the Pull Request analysis result. The plugin simply vote -1 or 1 depending on if the Sonar Quality gate was passed or failed. **Note** the plugin only posts the Gerrit vote. Any issues
+found by Sonar is not added as comments in Gerrit, instead a link to the sonar pull request is provided in the Gerrit review message. The plugin requires a SonarQube™ plan with the Pull Request feature.
 
 ## Download binaries
 
@@ -42,7 +43,7 @@ You must provide the following properties to the PR build:
 
 If you are using [Jenkins Gerrit trigger](https://github.com/jenkinsci/gerrit-trigger-plugin) and Maven you may do something like this in the build triggered by `patchset-created`:
 
-```groovy
+```bash
 sh "./mvnw
     -Dsonar.pullrequest.base=${params.GERRIT_BRANCH} \
     -Dsonar.pullrequest.branch=${params.GERRIT_REFSPEC.replaceFirst('refs/', '')} \
@@ -50,9 +51,9 @@ sh "./mvnw
     sonar:sonar"
 ```
 
-## System requirements 
+## System requirements
 
-* SonarQube™ version 8.9 or later.
+* SonarQube™ version 10.2 or later.
 
 ## Build
 
@@ -71,3 +72,5 @@ In GitHub create a new release, set tag with format n.n.n, and press `Publish re
 `1.1.0` - Removed configuration `gerrit.pr.sonar.url`
 
 `1.2.0` - Added conditions metric key variables.
+
+`2.0.0` - Minimum version 10.2, and updated dependencies
