@@ -74,3 +74,5 @@ In GitHub create a new release, set tag with format n.n.n, and press `Publish re
 `1.2.0` - Added conditions metric key variables.
 
 `2.0.0` - Minimum version 10.2, and updated dependencies
+
+`3.0.0` - Minimum version 2025.1, and updated dependencies
