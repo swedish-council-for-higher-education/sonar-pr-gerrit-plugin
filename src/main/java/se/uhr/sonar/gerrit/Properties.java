@@ -12,7 +12,7 @@ public enum Properties {
 
 	private final String key;
 
-	private Properties(String key) {
+	Properties(String key) {
 		this.key = key;
 	}
 
