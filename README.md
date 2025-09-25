@@ -53,7 +53,7 @@ sh "./mvnw
 
 ## System requirements
 
-* SonarQube™ version 10.2 or later.
+* SonarQube™ version 2025.1 or later.
 
 ## Build
 

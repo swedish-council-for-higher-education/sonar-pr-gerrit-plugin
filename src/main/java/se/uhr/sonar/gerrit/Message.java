@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class Message {
 
-	private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$\\{([\\w\\.]+)\\}");
+	private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$\\{([\\w.]+)}");
 
 	private Message() {
 

@@ -1,6 +1,6 @@
 package se.uhr.sonar.gerrit;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.sonar.api.Plugin;
 import org.sonar.api.PropertyType;
@@ -17,7 +17,7 @@ public class GerritPlugin implements Plugin {
 				.category(Constants.GERRIT_CATEGORY)
 				.type(PropertyType.BOOLEAN)
 				.defaultValue("true")
-				.onQualifiers(Arrays.asList(Qualifiers.PROJECT))
+				.onQualifiers(List.of(Qualifiers.PROJECT))
 				.index(index++)
 				.build();
 

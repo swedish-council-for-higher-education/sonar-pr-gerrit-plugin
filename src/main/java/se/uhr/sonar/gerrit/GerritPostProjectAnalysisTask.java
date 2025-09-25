@@ -4,10 +4,12 @@ import static org.sonar.api.ce.posttask.QualityGate.EvaluationStatus.NO_VALUE;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonar.api.ce.posttask.Analysis;
 import org.sonar.api.ce.posttask.Branch;
 import org.sonar.api.ce.posttask.PostProjectAnalysisTask;
 import org.sonar.api.ce.posttask.Project;
@@ -39,13 +41,13 @@ public class GerritPostProjectAnalysisTask implements PostProjectAnalysisTask {
 
 		projectAnalysis.getBranch().ifPresent(branch -> {
 			if (branch.getType() == Branch.Type.PULL_REQUEST) {
-				branch.getName().ifPresent(name -> projectAnalysis.getAnalysis().ifPresent(a -> a.getRevision().ifPresent(r -> {
+				branch.getName().ifPresent(name -> projectAnalysis.getAnalysis().flatMap(Analysis::getRevision).ifPresent(r -> {
 					if (enabled) {
-						vote(projectAnalysis, r, name, projectAnalysis.getQualityGate().getConditions());
+						vote(projectAnalysis, r, name, Objects.requireNonNull(projectAnalysis.getQualityGate()).getConditions());
 					} else {
 						LOGGER.debug("Gerrit pull request votes are disabled");
 					}
-				})));
+				}));
 			}
 		});
 	}
@@ -64,7 +66,7 @@ public class GerritPostProjectAnalysisTask implements PostProjectAnalysisTask {
 			variables.put("project.name", project.getName());
 			variables.put("pullrequest.key", pullRequestId);
 
-			variables.entrySet().stream().forEach(e -> LOGGER.debug("variable {}={}", e.getKey(), e.getValue()));
+			variables.forEach((key, value) -> LOGGER.debug("variable {}={}", key, value));
 
 			gerritClient.vote(projectAnalysis.getProject(), revision, pullRequestId,
 					qualityGate.getStatus() == Status.OK ? Score.OK : Score.ERROR, variables);
