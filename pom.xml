@@ -10,7 +10,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <mockito.version>5.20.0</mockito.version>
-        <sonar-plugin-api.version>11.1.0.2693</sonar-plugin-api.version>
+        <sonar-plugin-api.version>13.3.0.3209</sonar-plugin-api.version>
     </properties>
 
     <url>https://github.com/swedish-council-for-higher-education/sonar-pr-gerrit-plugin</url>
