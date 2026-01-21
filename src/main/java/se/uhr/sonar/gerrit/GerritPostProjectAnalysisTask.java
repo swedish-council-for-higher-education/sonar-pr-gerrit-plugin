@@ -2,9 +2,8 @@ package se.uhr.sonar.gerrit;
 
 import static org.sonar.api.ce.posttask.QualityGate.EvaluationStatus.NO_VALUE;
 
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -43,7 +42,7 @@ public class GerritPostProjectAnalysisTask implements PostProjectAnalysisTask {
 			if (branch.getType() == Branch.Type.PULL_REQUEST) {
 				branch.getName().ifPresent(name -> projectAnalysis.getAnalysis().flatMap(Analysis::getRevision).ifPresent(r -> {
 					if (enabled) {
-						vote(projectAnalysis, r, name, Objects.requireNonNull(projectAnalysis.getQualityGate()).getConditions());
+						vote(projectAnalysis, r, name);
 					} else {
 						LOGGER.debug("Gerrit pull request votes are disabled");
 					}
@@ -52,15 +51,18 @@ public class GerritPostProjectAnalysisTask implements PostProjectAnalysisTask {
 		});
 	}
 
-	private void vote(ProjectAnalysis projectAnalysis, String revision, String pullRequestId, Collection<Condition> conditions) {
+	private void vote(ProjectAnalysis projectAnalysis, String revision, String pullRequestId) {
 		QualityGate qualityGate = projectAnalysis.getQualityGate();
 
 		if (qualityGate != null) {
 			Project project = projectAnalysis.getProject();
 
-			Map<String, String> variables = conditions.stream()
-					.filter(c -> c.getStatus() != NO_VALUE)
-					.collect(Collectors.toMap(Condition::getMetricKey, Condition::getValue));
+			Map<String, String> variables = qualityGate.getConditions() != null
+					? qualityGate.getConditions()
+							.stream()
+							.filter(c -> c.getStatus() != NO_VALUE)
+							.collect(Collectors.toMap(Condition::getMetricKey, Condition::getValue))
+					: new HashMap<>();
 
 			variables.put("project.key", project.getKey());
 			variables.put("project.name", project.getName());

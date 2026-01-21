@@ -15,6 +15,7 @@ import static org.sonar.api.testfixtures.posttask.PostProjectAnalysisTaskTester.
 import static org.sonar.api.testfixtures.posttask.PostProjectAnalysisTaskTester.newQualityGateBuilder;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -138,5 +139,40 @@ class GerritPostProjectAnalysisTaskTest {
 				.execute();
 
 		verify(gerritClient, times(0)).vote(any(Project.class), anyString(), anyString(), any(Score.class), anyMap());
+	}
+
+	@Test
+	void shouldHandleNullConditions() {
+
+		when(configuration.getBoolean(Properties.GERRIT_VOTES_ENABLED.key())).thenReturn(Optional.of(true));
+
+		QualityGate qualityGate = newQualityGateBuilder().setId("id").setName("name").setStatus(QualityGate.Status.OK).build();
+		QualityGate mockedQualityGate = org.mockito.Mockito.spy(qualityGate);
+		when(mockedQualityGate.getConditions()).thenReturn(null);
+
+		PostProjectAnalysisTaskTester.of(postProjectAnalysisTask)
+				.withCeTask(newCeTaskBuilder().setId("id").setStatus(CeTask.Status.SUCCESS).build())
+				.withProject(newProjectBuilder().setUuid("uuid").setKey(PROJECT_KEY).setName(PROJECT_NAME).build())
+				.at(NOW)
+				.withAnalysisUuid(ANALYSIS_UUID)
+				.withRevision(REVISION)
+				.withBranch(newBranchBuilder().setName(PR_ID).setType(Branch.Type.PULL_REQUEST).build())
+				.withQualityGate(mockedQualityGate)
+				.execute();
+
+		ArgumentCaptor<Project> projectCaptor = ArgumentCaptor.forClass(Project.class);
+		@SuppressWarnings("unchecked")
+		ArgumentCaptor<Map<String, String>> variablesCaptor = ArgumentCaptor.forClass(Map.class);
+
+		verify(gerritClient).vote(projectCaptor.capture(), eq(REVISION), eq(PR_ID), eq(Score.OK), variablesCaptor.capture());
+
+		assertThat(projectCaptor.getValue().getKey()).isEqualTo(PROJECT_KEY);
+		assertThat(projectCaptor.getValue().getName()).isEqualTo(PROJECT_NAME);
+		
+		Map<String, String> variables = variablesCaptor.getValue();
+		assertThat(variables).containsEntry("project.key", PROJECT_KEY);
+		assertThat(variables).containsEntry("project.name", PROJECT_NAME);
+		assertThat(variables).containsEntry("pullrequest.key", PR_ID);
+		assertThat(variables).doesNotContainKey("key");
 	}
 }

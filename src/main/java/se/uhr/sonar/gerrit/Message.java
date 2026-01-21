@@ -18,7 +18,8 @@ public class Message {
 		StringBuilder buffer = new StringBuilder();
 
 		while (matcher.find()) {
-			matcher.appendReplacement(buffer, variables.getOrDefault(matcher.group(1), ""));
+			String replacement = variables.getOrDefault(matcher.group(1), "");
+			matcher.appendReplacement(buffer, Matcher.quoteReplacement(replacement));
 		}
 		matcher.appendTail(buffer);
 
