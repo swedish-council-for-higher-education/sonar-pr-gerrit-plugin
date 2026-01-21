@@ -27,4 +27,9 @@ class MessageTest {
 	void shouldHandleNonExistingVariable() {
 		assertThat(Message.evaluate("start${nonexisting}end", Map.of())).isEqualTo("startend");
 	}
+
+	@Test
+	void shouldEscapeReplacementValues() {
+		assertThat(Message.evaluate("Value:${val}", Map.of("val", "a$b\\c"))).isEqualTo("Value:a$b\\c");
+	}
 }

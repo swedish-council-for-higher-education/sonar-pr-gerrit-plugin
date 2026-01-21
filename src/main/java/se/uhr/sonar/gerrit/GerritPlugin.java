@@ -5,7 +5,6 @@ import java.util.List;
 import org.sonar.api.Plugin;
 import org.sonar.api.PropertyType;
 import org.sonar.api.config.PropertyDefinition;
-import org.sonar.api.resources.Qualifiers;
 
 public class GerritPlugin implements Plugin {
 
@@ -17,7 +16,7 @@ public class GerritPlugin implements Plugin {
 				.category(Constants.GERRIT_CATEGORY)
 				.type(PropertyType.BOOLEAN)
 				.defaultValue("true")
-				.onQualifiers(List.of(Qualifiers.PROJECT))
+				.onConfigScopes(List.of(PropertyDefinition.ConfigScope.PROJECT))
 				.index(index++)
 				.build();
 
